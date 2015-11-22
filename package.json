@@ -1,8 +1,13 @@
 {
   "name": "vscode-todo",
   "description": "Lists todo:s in the project",
-  "version": "0.0.1",
-  "publisher": "Mattias Pernhult",
+  "version": "0.1.0",
+  "publisher": "MattiasPernhult",
+  "icon": "images/vscode-todo.png",
+  "galleryBanner": {
+        "color": "#5c2d91",
+        "theme": "dark"
+    },
   "engines": {
     "vscode": "^0.10.1"
   },
