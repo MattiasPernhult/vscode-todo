@@ -25,7 +25,11 @@
     "commands": [
       {
         "command": "extension.showTodos",
-        "title": "Show TODO:s"
+        "title": "TODO: Show todos"
+      },
+      {
+        "command": "extension.chooseLanguageTodo",
+        "title": "TODO: Choose language"
       }
     ]
   },

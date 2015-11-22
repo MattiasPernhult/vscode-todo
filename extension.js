@@ -16,9 +16,9 @@ var openBrowser = Commands.registerCommand('extension.openBrowser', function() {
 	opener(issue);
 });
 
-var openQuickPick = Commands.registerCommand('extension.openQuickPick', function() {
+var openQuickPick = Commands.registerCommand('extension.showTodos', function() {
 	if (findFileExtension === undefined) {
-		Window.showInformationMessage('You must choose a language first, use the command palette.');
+		Window.showInformationMessage('**You must choose a language first, use the command palette.**');
 		return;
 	}
 	findFiles(findFileExtension, function() {
@@ -71,27 +71,29 @@ function activate(context) {
 	// The command has been defined in the package.json file
 	// Now provide the implementation of the command with  registerCommand
 	// The commandId parameter must match the command field in package.json
-	var disposable = Commands.registerCommand('extension.showTodos', function () {
+	var disposable = Commands.registerCommand('extension.chooseLanguageTodo', function () {
 		var languageChoice = ['Go', 'Javascript', 'PHP', 'Coffeescript', 'C', 'C++', 'C#', 'Objective-C', 'Python', 'Ruby', 'Swift', 'Typescript', 'VisualBasic'];
 
 		Window.showQuickPick(languageChoice, {}).then(function(language) {
-			var findFilesExt = getFileExtension(language);
-			if (findFilesExt === null) {
-				Window.showErrorMessage('The choosen language "' + language + '" didn\'t match any file extensions, please create an issue', 'Create issue').then(function(choice) {
-					if (choice === 'Create issue') {
-						Commands.executeCommand('extension.openBrowser', function() {
-							
-						});
+			if (language !== undefined) {
+				var findFilesExt = getFileExtension(language);
+				if (findFilesExt === null) {
+					Window.showErrorMessage('**The choosen language "' + language + '" didn\'t match any file extensions, please create an issue.**', 'Create issue').then(function(choice) {
+						if (choice === 'Create issue') {
+							Commands.executeCommand('extension.openBrowser', function() {
+								
+							});
+						}
+					});
+				} else {
+					choosenLanguage = language; 
+					if (statusBarItem === undefined) {
+						createStatusBarItem();
 					}
-				});
-			} else {
-				choosenLanguage = language; 
-				if (statusBarItem === undefined) {
-					createStatusBarItem();
+					statusBarItem.text = 'TODO:s for ' + language;
+					statusBarItem.tooltip = 'Show TODO:s for ' + language;
+					findFileExtension = findFilesExt;
 				}
-				statusBarItem.text = 'TODO:s for ' + language;
-				statusBarItem.tooltip = 'Show TODO:s for ' + language;
-				findFileExtension = findFilesExt;
 			}
 		});
 	});
@@ -103,7 +105,7 @@ function createStatusBarItem() {
 	statusBarItem = Window.createStatusBarItem(vscode.StatusBarAlignment.Left);
 	statusBarItem.text = 'TODO:s';
 	statusBarItem.tooltip = 'Show TODO:s';
-	statusBarItem.command = 'extension.openQuickPick';
+	statusBarItem.command = 'extension.showTodos';
 	statusBarItem.color = '#FFFFFF';
 	statusBarItem.show();
 }
@@ -125,7 +127,7 @@ function getFileExtension(language) {
 	switch (language) {
 		case 'Go': return '**/*.go';
 		case 'Javascript': return '**/*.js';
-		case 'PHP': return '**/*.php';
+		case 'PHP ': return '**/*.php';
 		case 'Coffescript': return '**/*.coffee';
 		case 'C': return '**/*.c';
 		case 'C++': return '**/*.cpp';
@@ -148,7 +150,7 @@ function doWork(files, done) {
 	var message = {};
 	var times = 0;
 	if (files.length === 0) {
-		Window.showInformationMessage('There is no ' + choosenLanguage + ' files in the open project.');
+		Window.showInformationMessage('**There is no ' + choosenLanguage + ' files in the open project.**');
 		done({message: 'no files'}, message);
 	} else {
 		for (var i = 0; i < files.length; i++) {
