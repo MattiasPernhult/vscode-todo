@@ -18,6 +18,7 @@
     "Other"
   ],
   "activationEvents": [
+    "onCommand:extension.chooseLanguageTodo",
     "onCommand:extension.showTodos"
   ],
   "main": "./extension",

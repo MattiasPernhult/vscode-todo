@@ -9,53 +9,12 @@ var Commands = vscode.commands;
 var Languages = vscode.languages;
 var issue = 'https://github.com/MattiasPernhult/vscode-todo/issues';
 var findFileExtension;
+var findFileExludes;
 var statusBarItem;
 var choosenLanguage;
 
 var openBrowser = Commands.registerCommand('extension.openBrowser', function() {
 	opener(issue);
-});
-
-var openQuickPick = Commands.registerCommand('extension.showTodos', function() {
-	if (findFileExtension === undefined) {
-		Window.showInformationMessage('**You must choose a language first, use the command palette.**');
-		return;
-	}
-	findFiles(findFileExtension, function() {
-		if (resultTodo === undefined) {
-			return;
-		}
-		var resultTodoName = [];
-		for (var index in resultTodo) {
-			for (var i = 0; i < resultTodo[index].length; i++) {
-				var todo = resultTodo[index][i];
-				resultTodoName.push(todo.name);
-			}
-		}
-		Window.showQuickPick(resultTodoName, {}).then(function(response) {
-			var nameSplit = new String(response).split(' ');
-			var file = 'file://' + nameSplit[0];
-			var fileUri = vscode.Uri.parse(file);
-			Workspace.openTextDocument(fileUri).then(function(textDocument) {
-				Window.showTextDocument(textDocument, vscode.ViewColumn.One).then(function(textEditor) {
-					var line = Number(nameSplit[1].split(':')[0]) - 1;
-					var resultObjects = resultTodo[nameSplit[0]];
-					var startPos;
-					var endPos;
-					for (var i = 0; i < resultObjects.length; i++) {
-						var object = resultObjects[i];
-						if (object.line === line) {
-							startPos = new vscode.Position(object.line, 0);
-							endPos = new vscode.Position(object.line, object.lineLength);
-							break;
-						}
-					}
-					Window.activeTextEditor.selection = new vscode.Selection(startPos, endPos);
-				});
-			});
-		});
-	});
-	
 });
 
 // this method is called when the extension is activated
@@ -67,6 +26,8 @@ function activate(context) {
 	if (statusBarItem === undefined) {
 		createStatusBarItem();	
 	}
+
+	// TODO: Hello on you my friend 
 
 	// The command has been defined in the package.json file
 	// Now provide the implementation of the command with  registerCommand
@@ -93,11 +54,53 @@ function activate(context) {
 					statusBarItem.text = 'TODO:s for ' + language;
 					statusBarItem.tooltip = 'Show TODO:s for ' + language;
 					findFileExtension = findFilesExt;
+					findFileExludes = getFileExlude(language);
 				}
 			}
 		});
 	});
-
+	
+	var openQuickPick = Commands.registerCommand('extension.showTodos', function() {
+		if (findFileExtension === undefined) {
+			Window.showInformationMessage('**You must choose a language first, use the command palette.**');
+			return;
+		}
+		findFiles(findFileExtension, function() {
+			if (resultTodo === undefined) {
+				return;
+			}
+			var resultTodoName = [];
+			for (var index in resultTodo) {
+				for (var i = 0; i < resultTodo[index].length; i++) {
+					var todo = resultTodo[index][i];
+					resultTodoName.push(todo.name);
+				}
+			}
+			Window.showQuickPick(resultTodoName, {}).then(function(response) {
+				var nameSplit = new String(response).split(' ');
+				var file = 'file://' + nameSplit[0];
+				var fileUri = vscode.Uri.parse(file);
+				Workspace.openTextDocument(fileUri).then(function(textDocument) {
+					Window.showTextDocument(textDocument, vscode.ViewColumn.One).then(function(textEditor) {
+						var line = Number(nameSplit[1].split(':')[0]) - 1;
+						var resultObjects = resultTodo[nameSplit[0]];
+						var startPos;
+						var endPos;
+						for (var i = 0; i < resultObjects.length; i++) {
+							var object = resultObjects[i];
+							if (object.line === line) {
+								startPos = new vscode.Position(object.line, 0);
+								endPos = new vscode.Position(object.line, object.lineLength);
+								break;
+							}
+						}
+						Window.activeTextEditor.selection = new vscode.Selection(startPos, endPos);
+					});
+				});
+			});
+		});
+	});
+	context.subscriptions.push(openQuickPick);
 	context.subscriptions.push(disposable);
 }
 
@@ -111,7 +114,7 @@ function createStatusBarItem() {
 }
 
 function findFiles(findFilesExtension, done) {
-	Workspace.findFiles(findFilesExtension, '', 1000).then(function(files) {
+	Workspace.findFiles(findFilesExtension, findFileExludes, 1000).then(function(files) {
 		doWork(files, function(err, result) {
 			if (err) {
 				resultTodo = undefined;
@@ -121,6 +124,24 @@ function findFiles(findFilesExtension, done) {
 			done();
 		});
 	});
+}
+
+function getFileExlude(language) {
+	switch (language) {
+		case 'Go': return '';
+		case 'Javascript': return '**/node_modules/**';
+		case 'PHP ': return '';
+		case 'Coffescript': return '';
+		case 'C': return '';
+		case 'C++': return '';
+		case 'C#': return '';
+		case 'Objective-C': return '';
+		case 'Python': return '';
+		case 'Ruby': return '';
+		case 'Swift': return '';
+		case 'Typescript': return '**/node_modules/**';
+		case 'VisualBasic': return '';
+	}
 }
 
 function getFileExtension(language) {
@@ -160,7 +181,7 @@ function doWork(files, done) {
 				for (var line = 0; line < file._lines.length; line++) {
 					var textLine = String(file._lines[line]);
 					if (textLine.includes('TODO:')) {
-						if (!message.hasOwnProperty(textLine)) {
+						if (!message.hasOwnProperty(pathWithoutFile)) {
 							message[pathWithoutFile] = [];
 						}
 						var object = getObject();
@@ -173,7 +194,7 @@ function doWork(files, done) {
 				}
 			}).then(function() {
 				times++;
-				if (times === files.length) {
+				if (times === files.length) {					
 					return done(null, message);
 				}
 			});
