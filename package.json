@@ -1,0 +1,33 @@
+{
+	"name": "vscode-todo",
+	"description": "Lists todo:s in the project",
+	"version": "0.0.1",
+	"publisher": "Mattias Pernhult",
+	"engines": {
+		"vscode": "^0.10.1"
+	},
+	"repository": {
+		"type": "git",
+		"url": "https://github.com/MattiasPernhult/vscode-todo.git"
+	},
+	"homepage": "https://github.com/MattiasPernhult/vscode-todo#readme",
+	"bugs": {
+    	"url": "https://github.com/MattiasPernhult/vscode-todo/issues"
+  	},
+	"categories": [
+		"Other"
+	],
+	"activationEvents": [
+		"onCommand:extension.showTodos"
+	],
+	"main": "./extension",
+	"contributes": {
+		"commands": [{
+			"command": "extension.showTodos",
+			"title": "Show TODO:s"
+		}]
+	},
+	"devDependencies": {
+		"vscode": "0.10.x"
+	}
+}
