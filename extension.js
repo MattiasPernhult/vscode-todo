@@ -1,11 +1,17 @@
 // The module 'vscode' contains the VS Code extensibility API
 // Import the module and reference it with the alias vscode in your code below
 var vscode = require('vscode');
-var chucknorris = require('./chuck-norris.json');
+var opener = require('opener');
 var resultTodo;
 var Workspace = vscode.workspace;
 var Window = vscode.window;
 var Commands = vscode.commands;
+var Languages = vscode.languages;
+var issue = 'https://github.com/MattiasPernhult/vscode-todo/issues';
+
+var openBrowser = Commands.registerCommand('extension.openBrowser', function() {
+	opener(issue);
+});
 
 var openQuickPick = Commands.registerCommand('extension.openQuickPick', function() {
 	if (resultTodo === undefined) {
@@ -59,25 +65,53 @@ function activate(context) {
 	// The command has been defined in the package.json file
 	// Now provide the implementation of the command with  registerCommand
 	// The commandId parameter must match the command field in package.json
-	var disposable = Commands.registerCommand('extension.chuckNorris', function () {
-		var choice = ["Go", "JavaScript"];
+	var disposable = Commands.registerCommand('extension.showTodos', function () {
+		var languageChoice = ['Go', 'Javascript', 'PHP', 'Coffeescript', 'C', 'C++', 'C#', 'Objective-C', 'Python', 'Ruby', 'Swift', 'Typescript', 'VisualBasic'];
 
-		// vscode.window.showQuickPick(choice, {}).then(function(response) {
-		// 	console.log(response);
-		// });
-
-		Workspace.findFiles('**/*.go', '', 1000).then(function(files) {
-			doWork(files, function(result) {
-				if (result.length == 0) {
-					Window.showInformationMessage("No result");
-				} else {
-					resultTodo = result;
-				}
-			});
+		Window.showQuickPick(languageChoice, {}).then(function(language) {
+			var findFiles = getFileExtension(language);
+			if (findFiles === null) {
+				Window.showErrorMessage('The choosen language "' + language + '" didn\'t match any file extensions, please create an issue', 'Create issue').then(function(choice) {
+					if (choice === 'Create issue') {
+						Commands.executeCommand('extension.openBrowser', function() {
+							
+						});
+					}
+				});
+			} else {
+				Workspace.findFiles(findFiles, '', 1000).then(function(files) {
+					doWork(files, function(result) {
+						if (result.length == 0) {
+							Window.showInformationMessage('There is no TODO:s');
+						} else {
+							resultTodo = result;
+						}
+					});
+				});
+			}
 		});
 	});
 
 	context.subscriptions.push(disposable);
+}
+
+function getFileExtension(language) {
+	switch (language) {
+		case 'Go': return '**/*.go';
+		case 'Javascript': return '**/*.js';
+		case 'PHP': return '**/*.php';
+		case 'Coffescript': return '**/*.coffee';
+		case 'C': return '**/*.c';
+		case 'C++': return '**/*.cpp';
+		case 'C#': return '**/*.cs';
+		case 'Objective-C': return '**/*.m';
+		case 'Python': return '**/*.py';
+		case 'Ruby': return '**/*.rb';
+		case 'Swift': return '**/*.swift';
+		case 'Typescript': return '**/*.ts';
+		case 'VisualBasic': return '**/*.vb';
+		default: return null;
+	}
 }
 
 function getObject() {
@@ -107,7 +141,7 @@ function doWork(files, done) {
 			}
 		}).then(function() {
 			times++;
-			if (times == files.length) {
+			if (times === files.length) {
 				return done(message);
 			}
 		});
