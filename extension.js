@@ -3,8 +3,11 @@
 var vscode = require('vscode');
 var chucknorris = require('./chuck-norris.json');
 var resultTodo;
+var Workspace = vscode.workspace;
+var Window = vscode.window;
+var Commands = vscode.commands;
 
-var openQuickPick = vscode.commands.registerCommand('extension.openQuickPick', function() {
+var openQuickPick = Commands.registerCommand('extension.openQuickPick', function() {
 	if (resultTodo === undefined) {
 		return;
 	}
@@ -15,12 +18,12 @@ var openQuickPick = vscode.commands.registerCommand('extension.openQuickPick', f
 			resultTodoName.push(todo.name);
 		}
 	}
-	vscode.window.showQuickPick(resultTodoName, {}).then(function(response) {
+	Window.showQuickPick(resultTodoName, {}).then(function(response) {
 		var nameSplit = new String(response).split(' ');
 		var file = 'file://' + nameSplit[0];
 		var fileUri = vscode.Uri.parse(file);
-		vscode.workspace.openTextDocument(fileUri).then(function(textDocument) {
-			vscode.window.showTextDocument(textDocument, vscode.ViewColumn.One).then(function(textEditor) {
+		Workspace.openTextDocument(fileUri).then(function(textDocument) {
+			Window.showTextDocument(textDocument, vscode.ViewColumn.One).then(function(textEditor) {
 				var line = Number(nameSplit[1].split(':')[0]) - 1;
 				var resultObjects = resultTodo[nameSplit[0]];
 				var startPos;
@@ -33,7 +36,7 @@ var openQuickPick = vscode.commands.registerCommand('extension.openQuickPick', f
 						break;
 					}
 				}
-				vscode.window.activeTextEditor.selection = new vscode.Selection(startPos, endPos);
+				Window.activeTextEditor.selection = new vscode.Selection(startPos, endPos);
 			});
 		});
 	});
@@ -45,7 +48,7 @@ function activate(context) {
 	// this line of code will only be executed once when the extension is activated
 	console.log('Congratulations, your extension "vscode-todo" is now active!');
 
-	var statusBarItem = vscode.window.createStatusBarItem(vscode.StatusBarAlignment.Left);
+	var statusBarItem = Window.createStatusBarItem(vscode.StatusBarAlignment.Left);
 	statusBarItem.text = 'TODO:s';
 	statusBarItem.tooltip = 'Show TODO:s';
 	statusBarItem.command = 'extension.openQuickPick';
@@ -56,17 +59,17 @@ function activate(context) {
 	// The command has been defined in the package.json file
 	// Now provide the implementation of the command with  registerCommand
 	// The commandId parameter must match the command field in package.json
-	var disposable = vscode.commands.registerCommand('extension.chuckNorris', function () {
+	var disposable = Commands.registerCommand('extension.chuckNorris', function () {
 		var choice = ["Go", "JavaScript"];
 
 		// vscode.window.showQuickPick(choice, {}).then(function(response) {
 		// 	console.log(response);
 		// });
 
-		vscode.workspace.findFiles('**/*.go', '', 1000).then(function(files) {
+		Workspace.findFiles('**/*.go', '', 1000).then(function(files) {
 			doWork(files, function(result) {
 				if (result.length == 0) {
-					vscode.window.showInformationMessage("No result");
+					Window.showInformationMessage("No result");
 				} else {
 					resultTodo = result;
 				}
@@ -85,7 +88,7 @@ function doWork(files, done) {
 	var message = {};
 	var times = 0;
 	for (var i = 0; i < files.length; i++) {
-		vscode.workspace.openTextDocument(files[i]).then(function(file) {
+		Workspace.openTextDocument(files[i]).then(function(file) {
 			var uriString = String(file._uri);
 			var pathWithoutFile = uriString.substring(7, uriString.length);
 			for (var line = 0; line < file._lines.length; line++) {
