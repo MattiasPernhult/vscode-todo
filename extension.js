@@ -149,7 +149,7 @@ function getFileExtension(language) {
 		case 'Go': return '**/*.go';
 		case 'Javascript': return '**/*.js';
 		case 'PHP ': return '**/*.php';
-		case 'Coffeescript': return '**/*.coffee';
+		case 'Coffeescript': return '**/*[.js].coffee';
 		case 'C': return '**/*.c';
 		case 'C++': return '**/*.cpp';
 		case 'C#': return '**/*.cs';
