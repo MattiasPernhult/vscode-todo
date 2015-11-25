@@ -5,13 +5,24 @@ This extension adds functionality to list TODO:s in the project:
 - Choosing language
 - Show TODO:s
 
-### Features
+## Features
 
 ![Imgur](http://i.imgur.com/gGdE7CX.gif?1)
 
 ![Imgur](http://i.imgur.com/dLL4K3g.gif?1)
 
-## Local usage
+## Usage
+
+#### Marketplace
+The extension is published on Visual Studio Codes marketplace at:
+https://marketplace.visualstudio.com/items/MattiasPernhult.vscode-todo
+
+Download the extension with Visual Studio Code by open the command palette and run
+```bash
+  ext install vscode-todo
+```
+
+#### Local usage
 First you need to clone the project, I strongly recommend you to clone it directly to the extension folder under the .vscode folder, or you can clone it and then copy the project into this location.
 
 The .vscode folder is located under:
