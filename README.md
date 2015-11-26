@@ -31,7 +31,7 @@ The .vscode folder is located under:
 * **Linux:** $HOME/.vscode/extensions
 
 ## Contributing
-If you like to contribute with new features or fixing issues just set up a development environment and make a pull request and I will look into that as soon as possible
+If you like to contribute with new features or fixing issues just set up a development environment and make a pull request and I will look into that as soon as possible.
 
 #### Development environment
 You can set up a development environment for debugging the extension during extension development.
