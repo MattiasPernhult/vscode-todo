@@ -130,7 +130,7 @@ function getFileExlude(language) {
 	switch (language) {
 		case 'Go': return '';
 		case 'Javascript': return '**/node_modules/**';
-		case 'PHP ': return '';
+		case 'PHP': return '';
 		case 'Coffeescript': return '';
 		case 'C': return '';
 		case 'C++': return '';
@@ -148,7 +148,7 @@ function getFileExtension(language) {
 	switch (language) {
 		case 'Go': return '**/*.go';
 		case 'Javascript': return '**/*.js';
-		case 'PHP ': return '**/*.php';
+		case 'PHP': return '**/*.php';
 		case 'Coffeescript': return '**/*[.js].coffee';
 		case 'C': return '**/*.c';
 		case 'C++': return '**/*.cpp';
