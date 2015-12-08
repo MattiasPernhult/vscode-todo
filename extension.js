@@ -73,17 +73,20 @@ function activate(context) {
 			for (var index in resultTodo) {
 				for (var i = 0; i < resultTodo[index].length; i++) {
 					var todo = resultTodo[index][i];
-					resultTodoName.push(todo.name);
+					var t = {description: todo.name, label: todo.todoLine, fileName: todo.fileName, line: todo.line};
+					resultTodoName.push(t);
 				}
 			}
 			Window.showQuickPick(resultTodoName, {}).then(function(response) {
-				var nameSplit = new String(response).split(' ');
-				var file = 'file://' + nameSplit[0];
+				if (!response) return;
+				console.log(response);
+				var nameSplit = String(response.fileName);
+				var file = 'file://' + nameSplit;
 				var fileUri = vscode.Uri.parse(file);
 				Workspace.openTextDocument(fileUri).then(function(textDocument) {
 					Window.showTextDocument(textDocument, vscode.ViewColumn.One).then(function(textEditor) {
-						var line = Number(nameSplit[1].split(':')[0]) - 1;
-						var resultObjects = resultTodo[nameSplit[0]];
+						var line = response.line;
+						var resultObjects = resultTodo[nameSplit];
 						var startPos;
 						var endPos;
 						for (var i = 0; i < resultObjects.length; i++) {
@@ -164,7 +167,7 @@ function getFileExtension(language) {
 }
 
 function getObject() {
-	return {name: undefined, fileName: undefined, line: undefined, lineLength: undefined};
+	return {name: undefined, fileName: undefined, line: undefined, lineLength: undefined, todoLine: undefined};
 }
 
 function doWork(files, done) {
@@ -184,8 +187,13 @@ function doWork(files, done) {
 						if (!message.hasOwnProperty(pathWithoutFile)) {
 							message[pathWithoutFile] = [];
 						}
+						var todoLine = String(file._lines[line]);
+						todoLine = todoLine.substring(todoLine.indexOf('TODO:') + 5, todoLine.length);
 						var object = getObject();
-						object.name = pathWithoutFile + ' ' + (line + 1) + ':' + (textLine.indexOf('TODO:') + 1);
+						object.todoLine = todoLine;
+						var rootPath = Workspace.rootPath + '/';
+						var outputFile = pathWithoutFile.replace(rootPath, '');
+						object.name = outputFile + ' ' + (line + 1) + ':' + (textLine.indexOf('TODO:') + 1);
 						object.fileName = pathWithoutFile;
 						object.line = line;
 						object.lineLength = textLine.length;
