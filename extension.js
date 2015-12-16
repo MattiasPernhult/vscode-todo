@@ -195,12 +195,20 @@ function doWork(files, done) {
                             message[pathWithoutFile] = [];
                         }
                         var todoLine = String(file._lines[line]);
-                        todoLine = todoLine.substring(todoLine.indexOf('TODO:') + 5, todoLine.length);
+                        todoLine = todoLine.substring(todoLine.indexOf('TODO:'), todoLine.length);
                         var object = getObject();
+                        if (todoLine.length > 60) {
+                            todoLine = todoLine.substring(0, 57).trim();
+                            todoLine += '...';
+                        }
                         object.todoLine = todoLine;
                         var rootPath = Workspace.rootPath + '/';
                         var outputFile = pathWithoutFile.replace(rootPath, '');
-                        object.name = outputFile + ' ' + (line + 1) + ':' + (textLine.indexOf('TODO:') + 1);
+                        var todoLocation = outputFile + ' ' + (line + 1) + ':' + (textLine.indexOf('TODO:') + 1);
+                        if (todoLocation.length > 50) {
+                            todoLocation = '...' + todoLocation.substring(todoLocation.length - 47, todoLocation.length);
+                        }
+                        object.name = todoLocation;
                         object.fileName = pathWithoutFile;
                         object.line = line;
                         object.lineLength = textLine.length;
