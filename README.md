@@ -31,7 +31,7 @@ The .vscode folder is located under:
 * **Linux:** $HOME/.vscode/extensions
 
 ## Contributing
-If you like to contribute with new features or fixing issues just set up a development environment and make a pull request and I will look into that as soon as possible
+If you like to contribute with new features or fixing issues just set up a development environment and make a pull request and I will look into that as soon as possible.
 
 #### Development environment
 You can set up a development environment for debugging the extension during extension development.
@@ -46,6 +46,29 @@ cd vscode-todo
 npm install
 code . 
 ```
+
+## Changelog
+#### v0.2.0
+* No need to choose a language, the extension will look through all files if no language is choosen.
+* Activate on start up.
+* It's possible to choose either all languages or a specific language.
+* This feature was proposed by marlass in issue #4
+
+#### v0.1.3
+* Fixed bug with php files
+* No new feature was added in this release
+
+#### v0.1.2
+* The extension will detect .js.coffee files in this release
+
+#### v0.1.1
+* Fixed bug with coffee files
+* No new feature was added in this release
+
+#### 0.1.0
+* Initial release
+* Possibility to choose a language
+* Get all the TODO:s for the choosen language
 
 ## License
 [MIT](LICENSE)
