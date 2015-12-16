@@ -25,7 +25,8 @@
   ],
   "activationEvents": [
     "onCommand:extension.chooseLanguageTodo",
-    "onCommand:extension.showTodos"
+    "onCommand:extension.showTodos",
+    "*"
   ],
   "main": "./extension",
   "contributes": {
