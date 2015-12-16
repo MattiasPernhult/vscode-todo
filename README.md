@@ -7,9 +7,8 @@ This extension adds functionality to list TODO:s in the project:
 
 ## Features
 
-![Imgur](http://i.imgur.com/gGdE7CX.gif?1)
+![Imgur](http://i.imgur.com/p25rHeS.gif)
 
-![Imgur](http://i.imgur.com/dLL4K3g.gif?1)
 
 ## Usage
 
