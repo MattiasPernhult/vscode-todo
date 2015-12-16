@@ -47,6 +47,13 @@ code .
 ```
 
 ## Changelog
+#### v0.3.0
+* Improved the appearance of the TODO:s
+* Showing the actual TODO instead of only showing file path
+* Removed the root path from the file path
+* Will cut of characters if the actual TODO excess 60 characters
+* The same with the file path
+
 #### v0.2.0
 * No need to choose a language, the extension will look through all files if no language is choosen.
 * Activate on start up.
