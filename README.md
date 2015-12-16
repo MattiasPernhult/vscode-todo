@@ -47,5 +47,28 @@ npm install
 code . 
 ```
 
+## Changelog
+#### v0.2.0
+* No need to choose a language, the extension will look through all files if no language is choosen.
+* Activate on start up.
+* It's possible to choose either all languages or a specific language.
+* This feature was proposed by marlass in issue #4
+
+#### v0.1.3
+* Fixed bug with php files
+* No new feature was added in this release
+
+#### v0.1.2
+* The extension will detect .js.coffee files in this release
+
+#### v0.1.1
+* Fixed bug with coffee files
+* No new feature was added in this release
+
+#### 0.1.0
+* Initial release
+* Possibility to choose a language
+* Get all the TODO:s for the choosen language
+
 ## License
 [MIT](LICENSE)
