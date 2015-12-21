@@ -9,10 +9,12 @@ var Commands = vscode.commands;
 var Languages = vscode.languages;
 var issue = 'https://github.com/MattiasPernhult/vscode-todo/issues';
 var findFileExtension;
-var findFileExludes;
+var findFileExcludes;
+var findUsersFileExcludes;
 var statusBarItem;
 var choosenLanguage;
-
+var workspaceConfig;
+var configurationChanged;
 var openBrowser = Commands.registerCommand('extension.openBrowser', function () {
     opener(issue);
 });
@@ -27,8 +29,15 @@ function activate(context) {
         createStatusBarItem();
     }
 
-    // TODO: Hello on you my friend 
+    workspaceConfig = vscode.workspace.getConfiguration();
+    vscode.workspace.onDidChangeConfiguration(function (event) {
+        workspaceConfig = vscode.workspace.getConfiguration();
+        configurationChanged = true;
+    });
 
+    choosenLanguage = 'All'; //default value
+    configurationChanged = true; //to set findUsersFileExcludes initally
+    findUsersFileExcludes = '';
     // The command has been defined in the package.json file
     // Now provide the implementation of the command with  registerCommand
     // The commandId parameter must match the command field in package.json
@@ -39,38 +48,26 @@ function activate(context) {
             if (language === undefined) {
                 return;
             }
+            choosenLanguage = language;
+            updateFileExtension();
+            updateFileExclude();
 
-            var findFilesExt = getFileExtension(language);
-            if (findFilesExt === null) {
-                Window.showErrorMessage('**The choosen language "' + language + '" didn\'t match any file extensions, please create an issue.**', 'Create issue').then(function (choice) {
-                    if (choice === 'Create issue') {
-                        Commands.executeCommand('extension.openBrowser', function () {
-
-                        });
-                    }
-                });
-            } else {
-                choosenLanguage = language;
-                if (statusBarItem === undefined) {
-                    createStatusBarItem();
-                }
-                if (language === 'All') {
-                    statusBarItem.text = 'TODO:s';
-                } else {
-                    statusBarItem.text = 'TODO:s for ' + language;
-                }
-                statusBarItem.tooltip = 'Show TODO:s for ' + language;
-                findFileExtension = findFilesExt;
-                findFileExludes = getFileExlude(language);
+            if (statusBarItem === undefined) {
+                createStatusBarItem();
             }
+            if (language === 'All') {
+                statusBarItem.text = 'TODO:s';
+            } else {
+                statusBarItem.text = 'TODO:s for ' + language;
+            }
+            statusBarItem.tooltip = 'Show TODO:s for ' + language;
         });
     });
 
     var openQuickPick = Commands.registerCommand('extension.showTodos', function () {
-        if (findFileExtension === undefined) {
-            findFileExtension = getFileExtension('All');
-        }
-        findFiles(findFileExtension, function () {
+        updateFileExtension();
+        updateFileExclude();
+        findFiles(function () {
             if (resultTodo === undefined) {
                 return;
             }
@@ -84,7 +81,6 @@ function activate(context) {
             }
             Window.showQuickPick(resultTodoName, {}).then(function (response) {
                 if (!response) return;
-                console.log(response);
                 var nameSplit = String(response.fileName);
                 var file = 'file://' + nameSplit;
                 var fileUri = vscode.Uri.parse(file);
@@ -123,8 +119,8 @@ function createStatusBarItem() {
     statusBarItem.show();
 }
 
-function findFiles(findFilesExtension, done) {
-    Workspace.findFiles(findFilesExtension, findFileExludes, 1000).then(function (files) {
+function findFiles(done) {
+    Workspace.findFiles(findFileExtension, findFileExcludes, 1000).then(function (files) {
         doWork(files, function (err, result) {
             if (err) {
                 resultTodo = undefined;
@@ -136,42 +132,46 @@ function findFiles(findFilesExtension, done) {
     });
 }
 
-function getFileExlude(language) {
-    switch (language) {
-        case 'All': return '**/node_modules/**';
-        case 'Go': return '';
-        case 'Javascript': return '**/node_modules/**';
-        case 'PHP': return '';
-        case 'Coffeescript': return '';
-        case 'C': return '';
-        case 'C++': return '';
-        case 'C#': return '';
-        case 'Objective-C': return '';
-        case 'Python': return '';
-        case 'Ruby': return '';
-        case 'Swift': return '';
-        case 'Typescript': return '**/node_modules/**';
-        case 'VisualBasic': return '';
+function updateFileExclude() {
+
+    findFileExcludes = '{'
+    switch (choosenLanguage) {
+        case 'All':
+        case 'Javascript':
+        case 'Coffeescript':
+        case 'Typescript':
+            findFileExcludes += '**/node_modules/**';
+            break;
     }
+    if (configurationChanged && workspaceConfig.todoIgnore) {
+        findUsersFileExcludes = '';
+        for (var i = 0; i < workspaceConfig.todoIgnore.length; i++) {
+            findUsersFileExcludes += ',' + workspaceConfig.todoIgnore[i];
+        }
+        configurationChanged = false;
+    }
+
+    findFileExcludes += findUsersFileExcludes + '}'
 }
 
-function getFileExtension(language) {
-    switch (language) {
-        case 'All': return '**/*.{php,go,js,coffee,c,cpp,cs,m,py,rb,swift,ts,vb}';
-        case 'Go': return '**/*.go';
-        case 'Javascript': return '**/*.js';
-        case 'PHP': return '**/*.php';
-        case 'Coffeescript': return '**/*[.js].coffee';
-        case 'C': return '**/*.c';
-        case 'C++': return '**/*.cpp';
-        case 'C#': return '**/*.cs';
-        case 'Objective-C': return '**/*.m';
-        case 'Python': return '**/*.py';
-        case 'Ruby': return '**/*.rb';
-        case 'Swift': return '**/*.swift';
-        case 'Typescript': return '**/*.ts';
-        case 'VisualBasic': return '**/*.vb';
-        default: return null;
+function updateFileExtension() {
+
+    switch (choosenLanguage) {
+        case 'All': findFileExtension = '**/*.{php,go,js,coffee,c,cpp,cs,m,py,rb,swift,ts,vb}'; break;
+        case 'Go': findFileExtension = '**/*.go'; break;
+        case 'Javascript': findFileExtension = '**/*.js'; break;
+        case 'PHP': findFileExtension = '**/*.php'; break;
+        case 'Coffeescript': findFileExtension = '**/*[.js].coffee'; break;
+        case 'C': findFileExtension = '**/*.c'; break;
+        case 'C++': findFileExtension = '**/*.cpp'; break;
+        case 'C#': findFileExtension = '**/*.cs'; break;
+        case 'Objective-C': findFileExtension = '**/*.m'; break;
+        case 'Python': findFileExtension = '**/*.py'; break;
+        case 'Ruby': findFileExtension = '**/*.rb'; break;
+        case 'Swift': findFileExtension = '**/*.swift'; break;
+        case 'Typescript': findFileExtension = '**/*.ts'; break;
+        case 'VisualBasic': findFileExtension = '**/*.vb'; break;
+        default: findFileExtension = '**/*.{php,go,js,coffee,c,cpp,cs,m,py,rb,swift,ts,vb}'; break;
     }
 }
 
@@ -207,7 +207,7 @@ function doWork(files, done) {
                         var rootPath = Workspace.rootPath + '/';
                         var outputFile = pathWithoutFile.replace(rootPath, '');
                         var todoLocation = outputFile + ' ' + (line + 1) + ':' + (textLine.indexOf('TODO:') + 1);
-                        if (todoLocation.length > 50) {
+                        if (todoLocation.length > 50) {
                             todoLocation = '...' + todoLocation.substring(todoLocation.length - 47, todoLocation.length);
                         }
                         object.name = todoLocation;
