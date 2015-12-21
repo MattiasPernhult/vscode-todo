@@ -102,7 +102,9 @@ function activate(context) {
                                 break;
                             }
                         }
-                        Window.activeTextEditor.selection = new vscode.Selection(startPos, endPos);
+                        var newSelection = new vscode.Selection(startPos, endPos);
+                        Window.activeTextEditor.selection = newSelection;
+                        Window.activeTextEditor.revealRange(newSelection, vscode.TextEditorRevealType.InCenter)
                     });
                 });
             });
