@@ -12,6 +12,17 @@ This extension adds functionality to list TODO:s in the project:
 
 ## Usage
 
+### Settings
+To exclude files from the search for TODO's, create the variable todoIgnore in your workspace or user settings:
+
+``` json
+{ 
+  "todoIgnore":   ["**/test/**"]
+}
+```
+
+It should contain an array of glob-patterns.
+
 #### Marketplace
 The extension is published on Visual Studio Codes marketplace at:
 https://marketplace.visualstudio.com/items/MattiasPernhult.vscode-todo
@@ -47,6 +58,10 @@ code .
 ```
 
 ## Changelog
+#### v0.4.0
+* Support for ignoring files and folders through use of todoIgnore in configuration
+* Now scrolls to the selected TODO's line, instead of just highlighting it
+
 #### v0.3.0
 * Improved the appearance of the TODO:s
 * Showing the actual TODO instead of only showing file path
