@@ -182,6 +182,9 @@ function getObject() {
 function doWork(files, done) {
     var message = {};
     var times = 0;
+	
+	//Regex pattern
+	var regex = new RegExp("^\\W*(TODO\\s*:|TODO|FIXME\\s*:|FIXME)\\s*(.*)$", "i");
     if (files.length === 0) {
         Window.showInformationMessage('**There is no ' + choosenLanguage + ' files in the open project.**');
         done({ message: 'no files' }, message);
@@ -192,12 +195,13 @@ function doWork(files, done) {
                 var pathWithoutFile = uriString.substring(7, uriString.length);
                 for (var line = 0; line < file._lines.length; line++) {
                     var textLine = String(file._lines[line]);
-                    if (textLine.includes('TODO:')) {
+					var match = textLine.match(regex);
+                    if (match != null) {
                         if (!message.hasOwnProperty(pathWithoutFile)) {
                             message[pathWithoutFile] = [];
                         }
                         var todoLine = String(file._lines[line]);
-                        todoLine = todoLine.substring(todoLine.indexOf('TODO:'), todoLine.length);
+                        todoLine = todoLine.substring(todoLine.indexOf(match[1]), todoLine.length);
                         var object = getObject();
                         if (todoLine.length > 60) {
                             todoLine = todoLine.substring(0, 57).trim();
@@ -206,7 +210,7 @@ function doWork(files, done) {
                         object.todoLine = todoLine;
                         var rootPath = Workspace.rootPath + '/';
                         var outputFile = pathWithoutFile.replace(rootPath, '');
-                        var todoLocation = outputFile + ' ' + (line + 1) + ':' + (textLine.indexOf('TODO:') + 1);
+                        var todoLocation = outputFile + ' ' + (line + 1) + ':' + (todoLine.indexOf(match[1]) + 1);
                         if (todoLocation.length > 50) {
                             todoLocation = '...' + todoLocation.substring(todoLocation.length - 47, todoLocation.length);
                         }
