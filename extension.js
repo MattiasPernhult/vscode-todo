@@ -184,23 +184,23 @@ function doWork(files, done) {
     var times = 0;
 	
 	//Regex pattern
-	var regex = new RegExp("^\\W*(TODO\\s*:|TODO|FIXME\\s*:|FIXME)\\s*(.*)$", "i");
+	var regex = new RegExp("^\\W*(?:TODO|FIXME)\\s*\\W{0,1}(\\s+.*|(?:\\w|\\d).*)$", "i");
     if (files.length === 0) {
         Window.showInformationMessage('**There is no ' + choosenLanguage + ' files in the open project.**');
         done({ message: 'no files' }, message);
     } else {
         for (var i = 0; i < files.length; i++) {
             Workspace.openTextDocument(files[i]).then(function (file) {
-                var uriString = String(file._uri);
+                var uriString = file.uri.toString();
                 var pathWithoutFile = uriString.substring(7, uriString.length);
-                for (var line = 0; line < file._lines.length; line++) {
-                    var textLine = String(file._lines[line]);
+                for (var line = 0; line < file.lineCount; line++) {
+                    var textLine = file.lineAt(line).text;
 					var match = textLine.match(regex);
                     if (match != null) {
                         if (!message.hasOwnProperty(pathWithoutFile)) {
                             message[pathWithoutFile] = [];
                         }
-                        var todoLine = String(file._lines[line]);
+                        var todoLine = textLine;
                         todoLine = todoLine.substring(todoLine.indexOf(match[1]), todoLine.length);
                         var object = getObject();
                         if (todoLine.length > 60) {
