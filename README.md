@@ -51,7 +51,7 @@ First make sure you do **not** have the extension installed in `~/.vscode/extens
 ```bash
 rm -rf ~/.vscode/extensions/vscode-todo
 cd ~
-git clone https://github.com/MattiasPernhut/vscode-todo
+git clone https://github.com/MattiasPernhult/vscode-todo
 cd vscode-todo
 npm install
 code . 
