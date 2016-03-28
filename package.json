@@ -1,50 +1,54 @@
 {
-    "name": "vscode-todo",
-    "description": "Lists todo:s in the project",
-    "version": "0.5.0",
-    "publisher": "MattiasPernhult",
-    "icon": "images/vscode-todo.png",
-    "galleryBanner": {
-        "color": "#5c2d91",
-        "theme": "dark"
-    },
-    "engines": {
-        "vscode": "^0.10.1"
-    },
-    "repository": {
-        "type": "git",
-        "url": "https://github.com/MattiasPernhult/vscode-todo.git"
-    },
-    "homepage": "https://github.com/MattiasPernhult/vscode-todo#readme",
-    "bugs": {
-        "url": "https://github.com/MattiasPernhult/vscode-todo/issues"
-    },
-    "license": "MIT",
-    "categories": [
-        "Other"
-    ],
-    "activationEvents": [
-        "onCommand:extension.chooseLanguageTodo",
-        "onCommand:extension.showTodos",
-        "*"
-    ],
-    "main": "./extension",
-    "contributes": {
-        "commands": [
-            {
-                "command": "extension.chooseLanguageTodo",
-                "title": "TODO: Set language"
-            },
-            {
-                "command": "extension.showTodos",
-                "title": "TODO: List all todos"
-            }
-        ]
-    },
-    "devDependencies": {
-        "vscode": "0.10.x"
-    },
-    "dependencies": {
-        "opener": "1.4.1"
-    }
+  "name": "vscode-todo",
+  "description": "Lists todo:s in the project",
+  "version": "0.5.0",
+  "publisher": "MattiasPernhult",
+  "icon": "images/vscode-todo.png",
+  "scripts": {
+    "test": "mocha --recursive test/"  
+  },
+  "galleryBanner": {
+    "color": "#5c2d91",
+    "theme": "dark"
+  },
+  "engines": {
+    "vscode": "^0.10.1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/MattiasPernhult/vscode-todo.git"
+  },
+  "homepage": "https://github.com/MattiasPernhult/vscode-todo#readme",
+  "bugs": {
+    "url": "https://github.com/MattiasPernhult/vscode-todo/issues"
+  },
+  "license": "MIT",
+  "categories": [
+    "Other"
+  ],
+  "activationEvents": [
+    "onCommand:extension.chooseLanguageTodo",
+    "onCommand:extension.showTodos",
+    "*"
+  ],
+  "main": "./extension",
+  "contributes": {
+    "commands": [
+      {
+        "command": "extension.chooseLanguageTodo",
+        "title": "TODO: Set language"
+      },
+      {
+        "command": "extension.showTodos",
+        "title": "TODO: List all todos"
+      }
+    ]
+  },
+  "devDependencies": {
+    "chai": "^3.5.0",
+    "vscode": "0.10.x"
+  },
+  "dependencies": {
+    "opener": "1.4.1"
+  }
 }
