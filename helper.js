@@ -16,7 +16,6 @@ helper.getFileExtensionForLanguage = function(choosenLanguage) {
 };
 
 helper.getFileExludeForLanguage = function(choosenLanguage, configurationChanged, workspaceConfig) {
-    console.log('hejeh');
     var exclude = '{' + language[choosenLanguage].exclude;
     if (configurationChanged && workspaceConfig.todoIgnore) {
         var usersExclude = '';
