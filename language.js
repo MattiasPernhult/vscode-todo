@@ -14,11 +14,12 @@ var ruby = 'Ruby';
 var swift = 'Swift';
 var typescript = 'TypeScript';
 var visualbasic = 'VisualBasic';
+var rust = 'Rust';
 
 language[all] = {
     name: all,
     extension: '*',
-    exclude: '', 
+    exclude: '',
 };
 
 language[go] = {
@@ -32,7 +33,7 @@ language[javascript] = {
     name: javascript,
     alias: 'javascript',
     extension: '**/*.js',
-    exclude: '**/node_modules/**',  
+    exclude: '**/node_modules/**',
 };
 
 language[php] = {
@@ -112,14 +113,21 @@ language[visualbasic] = {
     exclude: '',
 };
 
-language.all = [language[all], language[go], language[javascript], 
-    language[php], language[coffeescript], language[c], language[cpp], 
-    language[csharp], language[objectivec], language[python], language[ruby], 
-    language[swift], language[typescript], language[visualbasic]
+language[rust] = {
+    name: rust,
+    alias: 'rust',
+    extension: '**/*.rs',
+    exclude: '',
+};
+
+language.all = [language[all], language[go], language[javascript],
+    language[php], language[coffeescript], language[c], language[cpp],
+    language[csharp], language[objectivec], language[python], language[ruby],
+    language[swift], language[typescript], language[visualbasic], language[rust]
 ];
 
 language.allName = [all, go, javascript, php, coffeescript, c, cpp, csharp,
-    objectivec, python, ruby, swift, typescript, visualbasic
+    objectivec, python, ruby, swift, typescript, visualbasic, rust
 ];
 
 module.exports = language;
