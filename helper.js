@@ -51,7 +51,7 @@ var findTodosinSpecifiedFile = function(file, todos, todosList) {
     var fileInUri = file.uri.toString();
     var pathWithoutFile = fileInUri.substring(7, fileInUri.length);
     
-    var regex = new RegExp("^\\W*(?:TODO|FIXME)\\s*\\W{0,1}(\\s+.*|(?:\\w|\\d).*)$", "i");
+    var regex = new RegExp("(?:TODO|FIXME)\\s*\\W{0,1}(\\s+.*|(?:\\w|\\d).*)$", "i");
     
     for (var line = 0; line < file.lineCount; line++) {
         var lineText = file.lineAt(line).text;
