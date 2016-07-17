@@ -2,6 +2,7 @@
 // Import the module and reference it with the alias vscode in your code below
 var vscode = require('vscode');
 var opener = require('opener');
+var colors = require('colors');
 var resultTodo;
 var Workspace = vscode.workspace;
 var Window = vscode.window;
@@ -55,6 +56,11 @@ function activate(context) {
             statusBarItem.tooltip = 'Show TODO:s for ' + usersChoosenLanguage;
         });  
     });
+    
+    var show = Commands.registerCommand('extension.showTodosSeparate', function() {
+        var output = Window.createOutputChannel('Todo:s');
+        output.show(false);
+    });
 
     var openQuickPick = Commands.registerCommand('extension.showTodos', function() {
         var fileExtensionForLanguage = helper.getFileExtensionForLanguage(usersChoosenLanguage);
@@ -62,6 +68,8 @@ function activate(context) {
         configurationChanged = false;
         helper.findFiles(fileExtensionForLanguage, fileExcludeForLanguage, usersChoosenLanguage, foundFiles);
     });
+    
+    context.subscriptions.push(show);
     context.subscriptions.push(openQuickPick);
     context.subscriptions.push(disposable);
 }

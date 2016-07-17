@@ -5,7 +5,7 @@
   "publisher": "MattiasPernhult",
   "icon": "images/vscode-todo.png",
   "scripts": {
-    "test": "mocha --recursive test/"  
+    "test": "mocha --recursive test/"
   },
   "galleryBanner": {
     "color": "#5c2d91",
@@ -29,6 +29,7 @@
   "activationEvents": [
     "onCommand:extension.chooseLanguageTodo",
     "onCommand:extension.showTodos",
+    "onCommand:extension.showTodosSeparate",
     "*"
   ],
   "main": "./extension",
@@ -41,6 +42,10 @@
       {
         "command": "extension.showTodos",
         "title": "TODO: List all todos"
+      },
+      {
+        "command": "extension.showTodosSeparate",
+        "title": "TODO: List all todos in separate window"
       }
     ]
   },
@@ -49,6 +54,7 @@
     "vscode": "0.10.x"
   },
   "dependencies": {
+    "colors": "^1.1.2",
     "opener": "1.4.1"
   }
 }
