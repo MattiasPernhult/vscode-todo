@@ -15,6 +15,8 @@ var swift = 'Swift';
 var typescript = 'TypeScript';
 var visualbasic = 'VisualBasic';
 var rust = 'Rust';
+var elm = "Elm"
+var typescriptReact = 'TypeScript-React'
 
 language[all] = {
     name: all,
@@ -120,14 +122,30 @@ language[rust] = {
     exclude: '',
 };
 
+language[elm] = { 
+    name: elm,
+    alias: 'elm',
+    extension: '**/*.elm',
+    exclude: '',
+}
+
+language[typescriptReact] = {
+    name: typescriptReact,
+    alias: 'typescriptreact',
+    extension: '**/*.tsx',
+    exclude: '',
+}
+
 language.all = [language[all], language[go], language[javascript],
     language[php], language[coffeescript], language[c], language[cpp],
     language[csharp], language[objectivec], language[python], language[ruby],
-    language[swift], language[typescript], language[visualbasic], language[rust]
+    language[swift], language[typescript], language[visualbasic], language[rust],
+    language[elm], language[typescriptReact]
 ];
 
 language.allName = [all, go, javascript, php, coffeescript, c, cpp, csharp,
-    objectivec, python, ruby, swift, typescript, visualbasic, rust
+    objectivec, python, ruby, swift, typescript, visualbasic, rust, elm,
+    typescriptReact
 ];
 
 module.exports = language;
