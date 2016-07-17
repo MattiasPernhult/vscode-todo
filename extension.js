@@ -59,8 +59,6 @@ function activate(context) {
     var openQuickPick = Commands.registerCommand('extension.showTodos', function() {
         var fileExtensionForLanguage = helper.getFileExtensionForLanguage(usersChoosenLanguage);
         var fileExcludeForLanguage = helper.getFileExludeForLanguage(usersChoosenLanguage, configurationChanged, usersWorkspaceConfig);
-        console.log(fileExtensionForLanguage);
-        console.log(fileExcludeForLanguage);
         configurationChanged = false;
         helper.findFiles(fileExtensionForLanguage, fileExcludeForLanguage, usersChoosenLanguage, foundFiles);
     });
