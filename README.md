@@ -1,3 +1,6 @@
+[![GitHub issues](https://img.shields.io/github/issues/MattiasPernhult/vscode-todo.svg)](https://github.com/MattiasPernhult/vscode-todo/issues)
+[![Join the chat at https://gitter.im/MattiasPernhult/vscode-todo](https://badges.gitter.im/Join%20Chat.svg)](https://gitter.im/MattiasPernhult/vscode-todo?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
+
 # TODO extension for Visual Studio Code
 
 This extension adds functionality to list TODO:s in the project:
@@ -56,40 +59,6 @@ cd vscode-todo
 npm install
 code . 
 ```
-
-## Changelog
-#### v0.4.0
-* Support for ignoring files and folders through use of todoIgnore in configuration
-* Now scrolls to the selected TODO's line, instead of just highlighting it
-
-#### v0.3.0
-* Improved the appearance of the TODO:s
-* Showing the actual TODO instead of only showing file path
-* Removed the root path from the file path
-* Will cut of characters if the actual TODO excess 60 characters
-* The same with the file path
-
-#### v0.2.0
-* No need to choose a language, the extension will look through all files if no language is choosen.
-* Activate on start up.
-* It's possible to choose either all languages or a specific language.
-* This feature was proposed by marlass in issue #4
-
-#### v0.1.3
-* Fixed bug with php files
-* No new feature was added in this release
-
-#### v0.1.2
-* The extension will detect .js.coffee files in this release
-
-#### v0.1.1
-* Fixed bug with coffee files
-* No new feature was added in this release
-
-#### 0.1.0
-* Initial release
-* Possibility to choose a language
-* Get all the TODO:s for the choosen language
 
 ## License
 [MIT](LICENSE)
