@@ -20,7 +20,7 @@ var typescriptReact = 'TypeScript-React'
 
 language[all] = {
     name: all,
-    extension: '*',
+    extension: '**/*',
     exclude: '',
 };
 

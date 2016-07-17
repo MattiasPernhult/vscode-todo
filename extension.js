@@ -29,11 +29,11 @@ function activate(context) {
     
     // need to register listener for when workspace configurations is changed because
     // it may change which file to exclude when searching for todo:s
-    Workspace.onDidChangeConfiguration(function(event) {
-        workspaceConfig = helper.getUsersWorkspaceConfigurations();
+    Workspace.onDidChangeConfiguration(function() {    
+        usersWorkspaceConfig = helper.getUsersWorkspaceConfigurations();
         configurationChanged = true;
     });
-    
+
     setDefaultValues();
     
     var disposable = Commands.registerCommand('extension.chooseLanguageTodo', function() {
@@ -59,6 +59,7 @@ function activate(context) {
     var openQuickPick = Commands.registerCommand('extension.showTodos', function() {
         var fileExtensionForLanguage = helper.getFileExtensionForLanguage(usersChoosenLanguage);
         var fileExcludeForLanguage = helper.getFileExludeForLanguage(usersChoosenLanguage, configurationChanged, usersWorkspaceConfig);
+        console.log(fileExcludeForLanguage);
         configurationChanged = false;
         helper.findFiles(fileExtensionForLanguage, fileExcludeForLanguage, usersChoosenLanguage, foundFiles);
     });

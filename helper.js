@@ -16,14 +16,14 @@ helper.getFileExtensionForLanguage = function(choosenLanguage) {
 };
 
 helper.getFileExludeForLanguage = function(choosenLanguage, configurationChanged, workspaceConfig) {
-    var exclude = '{' + language[choosenLanguage].exclude;
+    var exclude = '{' + '.vscode' + language[choosenLanguage].exclude;
     if (configurationChanged && workspaceConfig.todoIgnore) {
         var usersExclude = '';
         for (var i = 0; i < workspaceConfig.todoIgnore.length; i++) {
             usersExclude += ',' + workspaceConfig.todoIgnore[i];
         }
+        exclude += usersExclude + '}';
     }
-    exclude += findUsersFileExcludes + '}';
     return exclude;
 };
 
