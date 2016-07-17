@@ -22,14 +22,15 @@ var helper = require('./helper');
 function activate(context) {
 
     if (statusBarItem === undefined) {
-        helper.createStatusBarItem();
+        statusBarItem = helper.createStatusBarItem();
     }
 
     usersWorkspaceConfig = helper.getUsersWorkspaceConfigurations();
     
     // need to register listener for when workspace configurations is changed because
     // it may change which file to exclude when searching for todo:s
-    Workspace.onDidChangeConfiguration(function() {    
+    Workspace.onDidChangeConfiguration(function() {
+        console.log('onDidChangeConfiguration')
         usersWorkspaceConfig = helper.getUsersWorkspaceConfigurations();
         configurationChanged = true;
     });
@@ -44,7 +45,7 @@ function activate(context) {
                 return;
             }
             usersChoosenLanguage = userLanguage;
-            if (statusBarItem === undefined) {
+            if (!statusBarItem) {
                 statusBarItem = helper.createStatusBarItem();
             }
             if (language === 'All') {
@@ -58,7 +59,7 @@ function activate(context) {
 
     var openQuickPick = Commands.registerCommand('extension.showTodos', function() {
         var fileExtensionForLanguage = helper.getFileExtensionForLanguage(usersChoosenLanguage);
-        var fileExcludeForLanguage = helper.getFileExludeForLanguage(usersChoosenLanguage, configurationChanged, usersWorkspaceConfig);
+        var fileExcludeForLanguage = helper.getFileExludeForLanguage(usersChoosenLanguage, usersWorkspaceConfig);
         console.log(fileExcludeForLanguage);
         configurationChanged = false;
         helper.findFiles(fileExtensionForLanguage, fileExcludeForLanguage, usersChoosenLanguage, foundFiles);
@@ -70,6 +71,10 @@ function activate(context) {
 var foundFiles = function(err, todos, todosList) {
     if (err) {
         console.log(err);
+        return;
+    }
+    if (todosList.length === 0) {
+        Window.showInformationMessage('Couldn\'t find any TODO:s when searching in **' + usersChoosenLanguage + '** files');
         return;
     }
     Window.showQuickPick(todosList, {}).then(function(response) {

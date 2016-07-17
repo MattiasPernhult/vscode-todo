@@ -15,12 +15,15 @@ helper.getFileExtensionForLanguage = function(choosenLanguage) {
     return language[choosenLanguage].extension;
 };
 
-helper.getFileExludeForLanguage = function(choosenLanguage, configurationChanged, workspaceConfig) {
+helper.getFileExludeForLanguage = function(choosenLanguage, workspaceConfig) {
     var exclude = '{' + '.vscode' + language[choosenLanguage].exclude;
-    if (configurationChanged && workspaceConfig.todoIgnore) {
+    if (workspaceConfig.todoIgnore) {
         var usersExclude = '';
         for (var i = 0; i < workspaceConfig.todoIgnore.length; i++) {
-            usersExclude += ',' + workspaceConfig.todoIgnore[i];
+            var conf = workspaceConfig.todoIgnore[i].trim();
+            if (conf !== '') {
+                usersExclude += ',' + conf;
+            }
         }
         exclude += usersExclude + '}';
     }
@@ -73,7 +76,7 @@ var findTodosinFiles = function(files, choosenLanguage, done) {
     todosList = [];
     var times = 0;
     if (files.length === 0) {
-        Window.showInformationMessage('**There is no ' + choosenLanguage + ' files in the open project.**');
+        Window.showInformationMessage('There is no **' + choosenLanguage + '** files in the open project.');
         // errors
         done({ message: 'no files' }, null, null);
     } else {
