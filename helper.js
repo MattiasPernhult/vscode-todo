@@ -30,6 +30,15 @@ helper.getFileExludeForLanguage = function(choosenLanguage, workspaceConfig) {
     return exclude;
 };
 
+helper.getScanRegexForLanguage = function(choosenLanguage, workspaceConfig) {
+    //TODO: Add per-language specific scan expressions
+    var regex = "(?:TODO|FIXME)\\s*\\W{0,1}(\\s+.*|(?:\\w|\\d).*)$";
+    if(workspaceConfig.todoScanRegex){
+        regex = workspaceConfig.todoScanRegex;
+    }
+    return regex;
+};
+
 var getTodoMessage = function(lineText, match) {
     var todoMessage = lineText.substring(lineText.indexOf(match[1]), lineText.length);
     if (todoMessage.length > 60) {
@@ -49,11 +58,11 @@ var getTodoLocation = function(pathWithoutFile, todoMessage, line, match) {
     return todoLocation;
 };
 
-var findTodosinSpecifiedFile = function(file, todos, todosList) {
+var findTodosinSpecifiedFile = function(file, todos, todosList, scanRegex) {
     var fileInUri = file.uri.toString();
     var pathWithoutFile = fileInUri.substring(7, fileInUri.length);
     
-    var regex = new RegExp("(?:TODO|FIXME)\\s*\\W{0,1}(\\s+.*|(?:\\w|\\d).*)$", "i");
+    var regex = new RegExp(scanRegex, "i");
     
     for (var line = 0; line < file.lineCount; line++) {
         var lineText = file.lineAt(line).text;
@@ -71,7 +80,7 @@ var findTodosinSpecifiedFile = function(file, todos, todosList) {
     }
 };
 
-var findTodosinFiles = function(files, choosenLanguage, done) {
+var findTodosinFiles = function(files, choosenLanguage, scanRegex, done) {
     var todos = {};
     todosList = [];
     var times = 0;
@@ -82,7 +91,7 @@ var findTodosinFiles = function(files, choosenLanguage, done) {
     } else {
         for (var i = 0; i < files.length; i++) {
             Workspace.openTextDocument(files[i]).then(function(file) {
-                findTodosinSpecifiedFile(file, todos, todosList);
+                findTodosinSpecifiedFile(file, todos, todosList, scanRegex);
             }).then(function() {
                 times++;
                 if (times === files.length) {
@@ -93,9 +102,9 @@ var findTodosinFiles = function(files, choosenLanguage, done) {
     }
 };
 
-helper.findFiles = function(extension, exclude, choosenLanguage, done) {
+helper.findFiles = function(extension, exclude, choosenLanguage, scanRegex, done) {
     Workspace.findFiles(extension, exclude, 1000).then(function(files) {
-        findTodosinFiles(files, choosenLanguage, function(err, todos, todosList) {
+        findTodosinFiles(files, choosenLanguage, scanRegex, function(err, todos, todosList) {
             done(err, todos, todosList);
         });
     });

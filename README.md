@@ -26,6 +26,14 @@ To exclude files from the search for TODO's, create the variable todoIgnore in y
 
 It should contain an array of glob-patterns.
 
+To customize scan expression, create the variable todoScanRegex in your workspace or user settings:
+
+``` json
+{ 
+  "todoScanRegex":   "(?:TODO|FIXME)\\s*\\W{0,1}(\\s+.*|(?:\\w|\\d).*)$"
+}
+```
+
 #### Marketplace
 The extension is published on Visual Studio Codes marketplace at:
 https://marketplace.visualstudio.com/items/MattiasPernhult.vscode-todo
