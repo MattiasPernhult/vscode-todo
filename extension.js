@@ -60,9 +60,10 @@ function activate(context) {
     var openQuickPick = Commands.registerCommand('extension.showTodos', function() {
         var fileExtensionForLanguage = helper.getFileExtensionForLanguage(usersChoosenLanguage);
         var fileExcludeForLanguage = helper.getFileExludeForLanguage(usersChoosenLanguage, usersWorkspaceConfig);
+        var scanRegex = helper.getScanRegexForLanguage(usersChoosenLanguage, usersWorkspaceConfig);
         console.log(fileExcludeForLanguage);
         configurationChanged = false;
-        helper.findFiles(fileExtensionForLanguage, fileExcludeForLanguage, usersChoosenLanguage, foundFiles);
+        helper.findFiles(fileExtensionForLanguage, fileExcludeForLanguage, usersChoosenLanguage, scanRegex, foundFiles);
     });
     context.subscriptions.push(openQuickPick);
     context.subscriptions.push(disposable);
