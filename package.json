@@ -1,7 +1,7 @@
 {
   "name": "vscode-todo",
   "description": "Lists todo:s in the project",
-  "version": "0.7.0",
+  "version": "0.8.0",
   "publisher": "MattiasPernhult",
   "icon": "images/vscode-todo.png",
   "scripts": {
